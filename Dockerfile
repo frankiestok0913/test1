@@ -12,7 +12,7 @@ ARG PinggyToken
 
 # Thiết lập biến môi trường để script có thể sử dụng
 ENV Password=${Password}
-ENV PinggyToken=${PinggyToken}
+ENV PinggyToken=${apnrp9CeQZl}
 
 # Cấu hình SSH Server
 RUN mkdir /run/sshd && \
@@ -24,7 +24,7 @@ RUN mkdir /run/sshd && \
 # Script này sẽ khởi chạy đường hầm Pinggy trong nền, sau đó khởi chạy SSH server ở foreground
 RUN echo '#!/bin/bash' > /start.sh && \
     echo 'echo "🚀 Starting Pinggy tunnel in the background..."' >> /start.sh && \
-    echo 'ssh -p 443 -R0:127.0.0.1:22 -o StrictHostKeyChecking=no -o ServerAliveInterval=30 "${PinggyToken}+tcp@free.pinggy.io" &' >> /start.sh && \
+    echo 'ssh -p 443 -R0:127.0.0.1:22 -o StrictHostKeyChecking=no -o ServerAliveInterval=30 "${apnrp9CeQZl}+tcp@pro.pinggy.io" &' >> /start.sh && \
     echo 'sleep 2 # Chờ một chút để tunnel kết nối' >> /start.sh && \
     echo 'echo "🔐 Starting SSH server in the foreground to keep container running..."' >> /start.sh && \
     echo '/usr/sbin/sshd -D' >> /start.sh
