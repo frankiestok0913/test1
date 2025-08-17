@@ -6,29 +6,27 @@ RUN apt-get update && apt-get install -y locales openssh-server openssh-client &
     rm -rf /var/lib/apt/lists/*
 ENV LANG en_US.utf8
 
-# Nhận đối số lúc build: Mật khẩu cho root và Token của Pinggy
-ARG Password
-ARG PinggyToken
-
-# Thiết lập biến môi trường để script có thể sử dụng
-ENV Password=${Password}
-ENV PinggyToken=${PinggyToken}
+# ---- THAY ĐỔI Ở ĐÂY ----
+# Xóa bỏ ARG và gán trực tiếp giá trị vào biến môi trường (ENV)
+ENV Password="Lshckhh1!"
+ENV PinggyToken="apnrp9CeQZl"
+# ----------------------
 
 # Cấu hình SSH Server
 RUN mkdir /run/sshd && \
     echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config && \
     echo 'PasswordAuthentication yes' >> /etc/ssh/sshd_config && \
-    # ✨ THAY ĐỔI 1: Tăng mức độ chi tiết của log để thấy IP
     echo 'LogLevel VERBOSE' >> /etc/ssh/sshd_config && \
+    # Script sẽ tự động sử dụng biến ENV Password ở trên
     echo "root:${Password}" | chpasswd
 
 # Tạo script khởi động
 RUN echo '#!/bin/bash' > /start.sh && \
     echo 'echo "🚀 Starting Pinggy tunnel in the background..."' >> /start.sh && \
+    # Script sẽ tự động sử dụng biến ENV PinggyToken ở trên
     echo 'ssh -p 443 -R0:127.0.0.1:22 -o StrictHostKeyChecking=no -o ServerAliveInterval=30 "${PinggyToken}+tcp@free.pinggy.io" &' >> /start.sh && \
     echo 'sleep 2 # Chờ một chút để tunnel kết nối' >> /start.sh && \
     echo 'echo "🔐 Starting SSH server in the foreground to keep container running..."' >> /start.sh && \
-    # ✨ THAY ĐỔI 2: Thêm cờ "-e" để xuất log ra console
     echo '/usr/sbin/sshd -D -e' >> /start.sh
 
 # Cấp quyền thực thi cho script và expose các port cần thiết
