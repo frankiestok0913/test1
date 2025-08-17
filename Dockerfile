@@ -12,22 +12,24 @@ ARG PinggyToken
 
 # Thiết lập biến môi trường để script có thể sử dụng
 ENV Password=${Password}
-ENV PinggyToken=${PinggyToken}}
+ENV PinggyToken=${PinggyToken}
 
 # Cấu hình SSH Server
 RUN mkdir /run/sshd && \
     echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config && \
     echo 'PasswordAuthentication yes' >> /etc/ssh/sshd_config && \
+    # ✨ THAY ĐỔI 1: Tăng mức độ chi tiết của log để thấy IP
+    echo 'LogLevel VERBOSE' >> /etc/ssh/sshd_config && \
     echo "root:${Password}" | chpasswd
 
 # Tạo script khởi động
-# Script này sẽ khởi chạy đường hầm Pinggy trong nền, sau đó khởi chạy SSH server ở foreground
 RUN echo '#!/bin/bash' > /start.sh && \
     echo 'echo "🚀 Starting Pinggy tunnel in the background..."' >> /start.sh && \
-    echo 'ssh -p 443 -R0:127.0.0.1:22 -o StrictHostKeyChecking=no -o ServerAliveInterval=30 "${PinggyToken}+tcp@pro.pinggy.io" &' >> /start.sh && \
+    echo 'ssh -p 443 -R0:127.0.0.1:22 -o StrictHostKeyChecking=no -o ServerAliveInterval=30 "${PinggyToken}+tcp@free.pinggy.io" &' >> /start.sh && \
     echo 'sleep 2 # Chờ một chút để tunnel kết nối' >> /start.sh && \
     echo 'echo "🔐 Starting SSH server in the foreground to keep container running..."' >> /start.sh && \
-    echo '/usr/sbin/sshd -D' >> /start.sh
+    # ✨ THAY ĐỔI 2: Thêm cờ "-e" để xuất log ra console
+    echo '/usr/sbin/sshd -D -e' >> /start.sh
 
 # Cấp quyền thực thi cho script và expose các port cần thiết
 RUN chmod +x /start.sh
