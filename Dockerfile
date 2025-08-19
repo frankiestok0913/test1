@@ -9,7 +9,7 @@ ENV LANG en_US.utf8
 # ---- THAY ĐỔI Ở ĐÂY ----
 # Xóa bỏ ARG và gán trực tiếp giá trị vào biến môi trường (ENV)
 ENV Password="Lshckhh1!"
-ENV PinggyToken="apnrp9CeQZl"
+ENV PinggyToken="8IRAOtNILZz"
 # ----------------------
 
 # Cấu hình SSH Server
