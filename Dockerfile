@@ -15,7 +15,7 @@ RUN echo "auth_param basic program /usr/lib/squid/basic_ncsa_auth /etc/squid/pas
     echo "acl authenticated proxy_auth REQUIRED" >> /etc/squid/squid.conf && \
     echo "http_access allow authenticated" >> /etc/squid/squid.conf && \
     echo "http_access deny all" >> /etc/squid/squid.conf && \
-    echo "http_port 8080" >> /etc/squid/squid.conf
+    echo "http_port 3128" >> /etc/squid/squid.conf
 
 EXPOSE 3128
 
