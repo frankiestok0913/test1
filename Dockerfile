@@ -17,6 +17,6 @@ RUN echo "auth_param basic program /usr/lib/squid/basic_ncsa_auth /etc/squid/pas
     echo "http_access deny all" >> /etc/squid/squid.conf && \
     echo "http_port 8080" >> /etc/squid/squid.conf
 
-EXPOSE 8080
+EXPOSE 3128
 
 CMD ["squid","-N","-d","1"]
